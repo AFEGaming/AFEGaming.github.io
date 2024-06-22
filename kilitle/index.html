@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Macrodroid Webhook Tetikleyici</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 25px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Macrodroid Webhook Tetikleyici</h1>
+        <button class="button" onclick="triggerWebhook('https://trigger.macrodroid.com/be8c56bc-07c1-49d3-b27d-e0c8da124441/Kilitle')">Kilitle</button>
+        <button class="button" onclick="triggerWebhook('https://trigger.macrodroid.com/be8c56bc-07c1-49d3-b27d-e0c8da124441/kilit iptal')">Kilit çöz (doğrula)</button>
+        <button class="button" onclick="triggerWebhook('https://trigger.macrodroid.com/be8c56bc-07c1-49d3-b27d-e0c8da124441/kilit iptal şifresiz')">Kilit çöz</button>
+    </div>
+
+    <script>
+        function triggerWebhook(url) {
+            fetch(url, {
+                method: 'GET'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Webhook başarıyla tetiklendi!');
+                } else {
+                    alert('Webhook tetikleme başarısız oldu.');
+                }
+            })
+            .catch(error => {
+                alert('Bir hata oluştu: ' + error);
+            });
+        }
+    </script>
+</body>
+</html>
