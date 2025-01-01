@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
         nav.classList.toggle('show');
     });
 
-    // Dortmund için koordinatlar
-    const latitude = 41.04321785515094;
-    const longitude = 28.9552080212335;
+    // istanbul xd
+    const latitude = 41.015137;
+    const longitude = 28.979530;
 
     // Ezan vakitlerini al
     fetch(`https://api.aladhan.com/v1/timings?latitude=${latitude}&longitude=${longitude}&method=2`)
