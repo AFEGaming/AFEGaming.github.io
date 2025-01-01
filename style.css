@@ -20,6 +20,12 @@ body {
     width: 30%;
 }
 
+@media (max-width: 768px) { /* 768px'den küçük ekranlar için */
+    .container {
+      width: 70%;
+    }
+  }
+
 .profile-image {
     width: 150px;
     height: 150px;
