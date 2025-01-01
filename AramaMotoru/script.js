@@ -1,30 +1,27 @@
 document.addEventListener("DOMContentLoaded", function() {
-    var audio = document.getElementById('backgroundMusic');
-    var toggleButton = document.getElementById('toggleButton');
-    var statusLabel = document.getElementById('statusLabel');
-
-    toggleButton.addEventListener('click', function() {
-        if (audio.paused) {
-            audio.play();
-            statusLabel.textContent = 'Müzik Çalıyor';
-            toggleButton.textContent = 'Duraklat';
-        } else {
-            audio.pause();
-            statusLabel.textContent = 'Müzik Durdu';
-            toggleButton.textContent = 'Başlat';
+    // Arama kutusuna 'enter' tuşu ile tetiklenmesini sağla
+    var searchInput = document.getElementById("searchQuery");
+    searchInput.addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            searchGoogle();
         }
     });
 
     var feelingLuckyButton = document.getElementById('feelingLuckyButton');
     if (feelingLuckyButton) {
-        feelingLuckyButton.addEventListener('click', feelingLucky);
+        feelingLuckyButton.addEventListener('click', function() {
+            feelingLucky();
+            feelingLuckyButton.disabled = true; // Buton devre dışı bırakılır
+        });
     }
 });
 
 function searchGoogle() {
     var query = document.getElementById("searchQuery").value;
-    var googleSearchUrl = "https://www.google.com/search?q=" + encodeURIComponent(query);
-    window.location.href = googleSearchUrl;
+    if (query.trim() !== "") { // Eğer sorgu boş değilse
+        var googleSearchUrl = "https://www.google.com/search?q=" + encodeURIComponent(query);
+        window.location.href = googleSearchUrl;
+    }
 }
 
 function feelingLucky() {

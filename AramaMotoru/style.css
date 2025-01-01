@@ -1,87 +1,51 @@
-body{
-    background-color: rgb(201, 198, 11);
-}
-
-h1{
+body {
+    background-color: #121212;
+    color: #fff;
+    font-family: "Courier New", monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
     text-align: center;
-    font-weight: bold;
-    font-style: normal;
-    font-family: "courier new"
 }
 
-.Good{
-    text-align: center;
-    border: solid 3px;
-    border-color: rgb(155, 155, 9);
-    border-radius: 15px;
-    font-family: cursive;
-    padding-bottom: 10px;
-    padding-top: 10px;
-    background-color: #F59914;
-}
-
-#Çok{
-    border: solid 3px;
-    border-color: rgb(155, 155, 9);
-    border-radius: 15px;
-}
-
-.search{
-    border: solid 3x;
-}
-
-.Good2{
-    font-family: cursive;
-}
-
-
-#musicControls {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    background-color: #005D8E;
-    padding: 10px;
-    border-radius: 10px;
-}
-
-#toggleButton {
-    font-size: 17px;
-    cursor: pointer;
-    background-color: #00A7FF;
-    border: none;
-}
-
-#statusLabel {
-    margin-left: 5px;
+h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 3rem;
+    margin-bottom: 30px;
 }
 
 .search-container {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .search-input {
-    background-color: #1CE882;
+    background-color: #333;
+    color: #fff;
     border-radius: 50px;
     width: 500px;
-    height: 22px;
+    height: 40px;
     text-align: center;
-    border: solid;
+    border: solid 1px #3b3b3b;
+    margin-bottom: 20px;
 }
 
-.search-button {
-    background-color: #1CE882;
-    border-radius: 50px;
-    width: 250px;
-    height: 25px;
-    border: solid;
+.buttons-container {
+    display: flex;
+    gap: 20px;
 }
 
-.feeling-lucky-button {
-    width: 250px; /* İstediğiniz genişliği ayarlayın */
-    height: 25px; /* İstediğiniz yüksekliği ayarlayın */
-    background-color: #1CE882; /* İstediğiniz arkaplan rengini ayarlayın */
-    border: solid;
+.search-button, .feeling-lucky-button {
+    background-color: #444;
+    color: #fff;
     border-radius: 50px;
-    margin-top: 10px; /* Düğme ile arama kutusu arasındaki boşluğu ayarlayın */
+    width: 240px;
+    height: 40px;
+    border: solid 1px #3b3b3b;
     cursor: pointer;
 }
