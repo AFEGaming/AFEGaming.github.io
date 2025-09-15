@@ -1,5 +1,63 @@
+# Setup
 title: AFE Blog
-description: Teknoloji ve projelerim
-baseurl: "/blog"
-url: "https://afegaming.github.io"
-theme: minima
+description: Teknoloji ve projelerim üzerine yazılar
+url: https://afegaming.github.io
+avatar: /profil.png       # Profil fotoğrafın
+paginate: 5
+permalink: pretty
+cover_image: /bg.jpeg     # İstersen blog kapak fotoğrafı ekleyebilirsin
+
+# Gems
+plugins:
+  - jekyll-gist
+  - jekyll-paginate
+  - jekyll-seo-tag
+  - jekyll-feed
+  - jekyll-sitemap
+
+# Optimize Jekyll
+exclude:
+  - .editorconfig
+  - .git
+  - .jekyll-cache
+  - Gemfile
+  - Gemfile.lock
+  - LICENSE.md
+  - README.md
+  - scripts/
+  - not-pure-poole.gemspec
+
+# Optimize Jekyll SEO Tag
+twitter:
+  username: AFEGaming
+  card: summary
+logo: /profil.png
+social:
+  name: Ahmet Tunahan Demir
+  links:
+    - https://instagram.com/afe_.d/
+    - https://youtube.com/@A.F.E.Gaming
+    - https://mastodon.social/@AFEGaming
+    - https://pixelfed.social/i/web/profile/721400960633596366
+    - https://github.com/AFEGaming
+google_site_verification: google4d5cef8bffbea691.html
+
+lang: tr
+
+sass:
+  sass_dir: _sass
+  style: :compressed
+
+# Options
+
+# Google Analytics (isteğe bağlı)
+# google_analytics: UA-000000-0
+
+# Disqus yorum sistemi (isteğe bağlı)
+# disqus: xxxxxx
+
+# Author info
+author:
+  name: Ahmet Tunahan Demir
+  url: https://github.com/AFEGaming/
+  email: gjawamaz@anonaddy.me
