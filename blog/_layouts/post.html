@@ -1,0 +1,15 @@
+<!-- post.html -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>{{ page.title }} | {{ site.title }}</title>
+<link rel="stylesheet" href="{{ site.baseurl }}/style.css">
+</head>
+<body>
+<a href="{{ site.baseurl }}/index.html">Ana Sayfa</a>
+<h1>{{ page.title }}</h1>
+<p><em>{{ page.date | date: "%d %B %Y" }}</em></p>
+<div>{{ content }}</div>
+</body>
+</html>

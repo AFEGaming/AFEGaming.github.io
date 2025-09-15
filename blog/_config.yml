@@ -1,0 +1,5 @@
+title: AFE Blog
+description: Teknoloji ve projelerim
+baseurl: "/blog"
+url: "https://afegaming.github.io"
+theme: minima
