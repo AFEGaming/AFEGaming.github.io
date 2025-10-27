@@ -1,22 +1,460 @@
-<!DOCTYPE html>
+<!doctype html>
+
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <title>AFE Arama motoru</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gelişmiş Google Arama — Hepsi Bir Arada</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#94a3b8;--accent:#1a73e8;--glass:rgba(255,255,255,0.04)}
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#071126 0%, #071a2a 100%);color:#e6eef8}
+    .app{max-width:1100px;margin:28px auto;padding:20px}
+    header{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    h1{margin:0;font-size:1.2rem}
+    .toolbar{display:flex;gap:8px;align-items:center}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:14px;border:1px solid rgba(255,255,255,0.03)}
+    .grid{display:grid;gap:10px}
+    .cols-3{grid-template-columns:repeat(3,1fr)}
+    .cols-2{grid-template-columns:repeat(2,1fr)}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input[type=text],select,input[type=number],textarea{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    textarea{min-height:64px}
+    .muted{font-size:12px;color:var(--muted)}
+    .actions{display:flex;gap:8px;margin-top:10px}
+    button{background:var(--accent);color:#fff;padding:9px 12px;border-radius:8px;border:0;cursor:pointer}
+    .btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.04)}
+    .small{padding:6px 8px;font-size:13px}
+    .output{margin-top:12px;padding:10px;border-radius:8px;background:var(--glass);font-family:monospace;word-break:break-all}
+    .tabs{display:flex;gap:6px}
+    .tab{padding:8px 10px;border-radius:8px;cursor:pointer;background:transparent;border:1px solid rgba(255,255,255,0.02)}
+    .tab.active{background:rgba(255,255,255,0.03)}
+    details{margin-top:8px}
+    .row{display:flex;gap:8px}
+    .hint{font-size:12px;color:var(--muted);margin-top:6px}
+    footer{margin-top:14px;font-size:12px;color:var(--muted);text-align:center}
+    @media (max-width:900px){.cols-3{grid-template-columns:1fr}.cols-2{grid-template-columns:1fr}}
+  </style>
 </head>
 <body>
-    <h1>Hoş Geldiniz</h1>
-    <div class="search-container">
-        <input type="text" id="searchQuery" placeholder="Google ile Ara" class="search-input">
-        <div class="buttons-container">
-            <button onclick="searchGoogle()" class="search-button">Ara</button>
-            <button onclick="feelingLucky()" class="feeling-lucky-button">Kendimi Şanslı Hissediyorum</button>
-        </div>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Gelişmiş Google Arama — Hepsi Bir Arada</h1>
+        <div class="muted">Tüm bilinen &amp; gizli Google arama parametrelerini tek sayfadan yönet</div>
+      </div>
+      <div class="toolbar">
+        <button id="toggleDark" class="btn-ghost small">Karanlık/Ters</button>
+        <button id="savePreset" class="small btn-ghost">Önayar Kaydet</button>
+        <button id="loadPreset" class="small btn-ghost">Önayar Yükle</button>
+        <button id="exportBtn" class="small btn-ghost">Dışa Aktar</button>
+      </div>
+    </header><div style="height:16px"></div>
+
+<section class="card">
+  <div class="tabs">
+    <div class="tab active" data-tab="basic">Temel</div>
+    <div class="tab" data-tab="advanced">Gelişmiş</div>
+    <div class="tab" data-tab="hidden">Gizli/Deneysel</div>
+    <div class="tab" data-tab="presets">Önayarlar</div>
+  </div>
+
+  <div id="tab-basic" class="tab-panel" style="margin-top:12px">
+    <div class="grid cols-3">
+      <div>
+        <label>Anahtar kelimeler (q)</label>
+        <input id="q" type="text" placeholder="ör: yapay zeka robot -insan" />
+        <div class="hint">Normal kelimeler, AND/OR, parantez ve joker * kullanabilirsiniz.</div>
+      </div>
+
+      <div>
+        <label>Tam ifade (as_epq / "...")</label>
+        <input id="as_epq" type="text" placeholder='ör: "büyük veri analizi"' />
+      </div>
+
+      <div>
+        <label>En az biri (as_oq)</label>
+        <input id="as_oq" type="text" placeholder="elma,armut,muz" />
+        <div class="muted">Virgülle ayırın veya boşluk bırakın; otomatik OR konur.</div>
+      </div>
     </div>
-    <script src="script.js"></script>
-</body>
-</html>
+
+    <div style="height:8px"></div>
+
+    <div class="grid cols-3">
+      <div>
+        <label>Hariç (as_eq / -)</label>
+        <input id="as_eq" type="text" placeholder="reklam,spam" />
+      </div>
+      <div>
+        <label>site: / as_sitesearch</label>
+        <input id="as_sitesearch" type="text" placeholder="example.com veya domain.com/klasor" />
+      </div>
+      <div>
+        <label>filetype: / as_filetype</label>
+        <input id="as_filetype" type="text" placeholder="pdf, docx, xls" />
+      </div>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div class="grid cols-3">
+      <div>
+        <label>intitle:</label>
+        <input id="intitle" type="text" />
+      </div>
+      <div>
+        <label>inurl:</label>
+        <input id="inurl" type="text" />
+      </div>
+      <div>
+        <label>intext:</label>
+        <input id="intext" type="text" />
+      </div>
+    </div>
+
+    <div style="height:12px"></div>
+
+    <div class="grid cols-3">
+      <div>
+        <label>after: (YYYY-MM-DD veya YYYY)</label>
+        <input id="after" type="text" placeholder="2023-01-01" />
+      </div>
+      <div>
+        <label>before:</label>
+        <input id="before" type="text" placeholder="2024-01-01" />
+      </div>
+      <div>
+        <label>as_qdr / tbs zaman filtresi</label>
+        <input id="as_qdr" type="text" placeholder="qdr:h, qdr:d, qdr:w, qdr:m6" />
+        <div class="muted">örn: qdr:m6 → son 6 ay, qdr:h → son 1 saat</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="tab-advanced" class="tab-panel" style="display:none;margin-top:12px">
+    <div class="grid cols-3">
+      <div>
+        <label>lr (lang_...)</label>
+        <select id="lr">
+          <option value="">(boş)</option>
+          <option value="lang_tr">Turkish</option>
+          <option value="lang_en">English</option>
+          <option value="lang_de">German</option>
+          <option value="lang_fr">French</option>
+        </select>
+      </div>
+
+      <div>
+        <label>gl (ülke kodu)</label>
+        <input id="gl" type="text" placeholder="tr, us, de" />
+      </div>
+
+      <div>
+        <label>cr (countryTR vb.)</label>
+        <input id="cr" type="text" placeholder="countryTR" />
+      </div>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div class="grid cols-3">
+      <div>
+        <label>tbm (mod: isch/vid/nws/shop/bks/pts/lcl)</label>
+        <select id="tbm">
+          <option value="">web</option>
+          <option value="isch">images</option>
+          <option value="vid">videos</option>
+          <option value="nws">news</option>
+          <option value="shop">shopping</option>
+          <option value="bks">books</option>
+          <option value="pts">patents</option>
+          <option value="lcl">local</option>
+        </select>
+      </div>
+
+      <div>
+        <label>num (1-100)</label>
+        <input id="num" type="number" value="10" min="1" max="100" />
+      </div>
+
+      <div>
+        <label>start (hangi sonuçtan başlasın)</label>
+        <input id="start" type="number" value="0" min="0" />
+      </div>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div class="grid cols-3">
+      <div>
+        <label>safe (Kapalı/Açık/Sıkı)</label>
+        <select id="safe">
+          <option value="">varsayılan</option>
+          <option value="active">active</option>
+          <option value="off">off</option>
+          <option value="strict">strict</option>
+        </select>
+      </div>
+
+      <div>
+        <label>filter (benzer sonuçları gizle: 0/1)</label>
+        <select id="filter">
+          <option value="">(auto)</option>
+          <option value="0">0 (kapalÄ±)</option>
+          <option value="1">1 (açık)</option>
+        </select>
+      </div>
+
+      <div>
+        <label>pws (kişiselleştirme: 0 kapat)</label>
+        <select id="pws">
+          <option value="">(auto)</option>
+          <option value="0">0</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="height:10px"></div>
+
+    <div>
+      <label>as_occt (where to search: title,url,text)</label>
+      <input id="as_occt" type="text" placeholder="title,url,text veya allintitle gibi" />
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div class="grid cols-3">
+      <div>
+        <label>as_rights (lisans filtreleri)</label>
+        <input id="as_rights" type="text" placeholder="cc_publicdomain, cc_attribute" />
+      </div>
+      <div>
+        <label>as_nlo / as_nhi (sayı aralığı)</label>
+        <input id="as_nlo" type="text" placeholder="min" />
+        <input id="as_nhi" type="text" placeholder="max" style="margin-top:6px" />
+      </div>
+      <div>
+        <label>as_dt (datatype / forum,report vb)</label>
+        <input id="as_dt" type="text" />
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-hidden" class="tab-panel" style="display:none;margin-top:12px">
+    <div class="muted">Gizli &amp; deneysel parametreler — dikkat: bazıları Google tarafından değiştirilebilir veya etkisiz hale gelebilir.</div>
+    <div style="height:8px"></div>
+    <div class="grid cols-3">
+      <div>
+        <label>udm (UI mode)</label>
+        <input id="udm" type="text" placeholder="14 gibi" />
+      </div>
+      <div>
+        <label>biw / bih (tarayıcı genişlik/yükseklik)</label>
+        <input id="biw" type="text" placeholder="1920" />
+        <input id="bih" type="text" placeholder="1080" style="margin-top:6px" />
+      </div>
+      <div>
+        <label>cad (cad=h/m)</label>
+        <input id="cad" type="text" placeholder="h veya m" />
+      </div>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div class="grid cols-3">
+      <div>
+        <label>uule (geocode base64)</label>
+        <input id="uule" type="text" placeholder="uule param (base64)" />
+      </div>
+      <div>
+        <label>sourceid</label>
+        <input id="sourceid" type="text" />
+      </div>
+      <div>
+        <label>ved / ei (takip id'leri genellikle otomatik)</label>
+        <input id="ved" type="text" />
+      </div>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <details class="card">
+      <summary style="cursor:pointer">İleri: daha az bilinen parametreler</summary>
+      <div style="padding:10px">
+        <div class="grid cols-3">
+          <div><label>as_nrm</label><input id="as_nrm" type="text" /></div>
+          <div><label>nfpr</label><input id="nfpr" type="text" placeholder="1 kapatmak için" /></div>
+          <div><label>as_qdr (qdr özel)</label><input id="as_qdr_hidden" type="text" /></div>
+        </div>
+        <div class="muted">Bu parametreler arama davranışını ince ayarlar; yanlış kombinasyonlarda sonuçlar değişken olabilir.</div>
+      </div>
+    </details>
+  </div>
+
+  <div id="tab-presets" class="tab-panel" style="display:none;margin-top:12px">
+    <div class="grid cols-3">
+      <div><button class="small btn-ghost" data-preset="recentpdf">Son 6 ay PDF</button></div>
+      <div><button class="small btn-ghost" data-preset="nocust">Kişiselleştirme kapalı</button></div>
+      <div><button class="small btn-ghost" data-preset="turkishalltitles">Türkçe başlıkta arama</button></div>
+    </div>
+
+    <div style="height:8px"></div>
+
+    <div>
+      <label>Kaydedilmiş önayarlar (localStorage)</label>
+      <select id="savedPresets"></select>
+      <div class="actions">
+        <button id="applyPreset" class="small">Uygula</button>
+        <button id="deletePreset" class="small btn-ghost">Sil</button>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:12px"></div>
+
+  <div class="card">
+    <div class="row">
+      <div style="flex:1">
+        <label>Oluşturulan Tam URL</label>
+        <div id="fullUrl" class="output">(önyükleniyor)</div>
+        <div class="actions">
+          <button id="openBtn">Yeni Sekmede Aç</button>
+          <button id="copyBtn" class="btn-ghost">Kopyala</button>
+          <button id="shareBtn" class="btn-ghost">Paylaş (Web Share)</button>
+          <button id="saveSearch" class="btn-ghost">Geçmişe Kaydet</button>
+        </div>
+      </div>
+      <div style="width:300px;margin-left:12px">
+        <label>Özet (q param)</label>
+        <div id="qPreview" class="output">(sorgu burada)</div>
+        <div class="muted">Ayrıntılar: tüm parametreler URL'e eklenecektir.</div>
+      </div>
+    </div>
+    <div style="height:8px"></div>
+    <div>
+      <label>Geçmiş (localStorage)</label>
+      <select id="historyList"></select>
+      <div class="actions">
+        <button id="loadHistory" class="small">Yükle</button>
+        <button id="clearHistory" class="small btn-ghost">Temizle</button>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<footer class="muted">Not: Google zaman zaman parametreleri değiştirir. Bu araç olabildiğince fazla parametreyi birleştirir — bazı kombinasyonlar beklenmedik sonuç verebilir.</footer>
+
+  </div>  <script>
+    // Basit DOM yardımcıları
+    const $ = id => document.getElementById(id);
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(t => t.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+      t.classList.add('active');
+      document.querySelectorAll('.tab-panel').forEach(p=>p.style.display='none');
+      $('tab-'+t.dataset.tab).style.display='block';
+    }));
+
+    // Açılış: bazı panellerin id'leri 'tab-<name>'
+    document.querySelectorAll('.tab').forEach(t=>{
+      const name = t.dataset.tab; const el = document.createElement('div'); el.id = 'tab-'+name; if(!document.getElementById('tab-'+name)){};
+    });
+
+    // Form elemanlarına bağlanma
+    const fields = ['q','as_epq','as_oq','as_eq','as_sitesearch','as_filetype','intitle','inurl','intext','after','before','as_qdr','lr','gl','cr','tbm','num','start','safe','filter','pws','as_occt','as_rights','as_nlo','as_nhi','as_dt','udm','biw','bih','cad','uule','sourceid','ved','as_nrm','nfpr','as_qdr_hidden'];
+
+    function getVal(id){const el=$(id); if(!el) return ''; if(el.tagName==='SELECT' || el.type==='text' || el.type==='number' || el.tagName==='INPUT' || el.tagName==='TEXTAREA') return el.value.trim(); return '';}
+
+    function buildQuery(){
+      // q kısmını oluştur (as_epq, as_oq, as_eq, normal q vs)
+      const parts = [];
+      const q = getVal('q'); if(q) parts.push(q);
+      const as_epq = getVal('as_epq'); if(as_epq) parts.push('"'+as_epq+'"');
+      const as_oq = getVal('as_oq'); if(as_oq){ const orp = as_oq.split(/[\n,|;]/).map(s=>s.trim()).filter(Boolean); if(orp.length) parts.push('('+orp.join(' OR ')+')'); }
+      const as_eq = getVal('as_eq'); if(as_eq){ const ex = as_eq.split(/[\n,|;]/).map(s=>s.trim()).filter(Boolean).map(x=>'-'+x).join(' '); if(ex) parts.push(ex); }
+      if(getVal('intitle')) parts.push('intitle:'+getVal('intitle'));
+      if(getVal('inurl')) parts.push('inurl:'+getVal('inurl'));
+      if(getVal('intext')) parts.push('intext:'+getVal('intext'));
+      if(getVal('as_sitesearch')) parts.push('site:'+getVal('as_sitesearch'));
+      if(getVal('as_filetype')) parts.push('filetype:'+getVal('as_filetype'));
+      if(getVal('after')) parts.push('after:'+getVal('after'));
+      if(getVal('before')) parts.push('before:'+getVal('before'));
+      return parts.join(' ').trim();
+    }
+
+    function buildUrl(){
+      const qstr = buildQuery();
+      const params = new URLSearchParams();
+      params.set('q', qstr);
+      // basit parametreler
+      if(getVal('lr')) params.set('lr', getVal('lr'));
+      if(getVal('gl')) params.set('gl', getVal('gl'));
+      if(getVal('cr')) params.set('cr', getVal('cr'));
+      if(getVal('tbm')) params.set('tbm', getVal('tbm'));
+      if(getVal('num')) params.set('num', getVal('num'));
+      if(getVal('start')) params.set('start', getVal('start'));
+      if(getVal('safe')) params.set('safe', getVal('safe'));
+      if(getVal('filter')) params.set('filter', getVal('filter'));
+      if(getVal('pws')) params.set('pws', getVal('pws'));
+      if(getVal('as_qdr')) params.set('tbs', getVal('as_qdr'));
+      if(getVal('as_occt')) params.set('as_occt', getVal('as_occt'));
+      if(getVal('as_rights')) params.set('as_rights', getVal('as_rights'));
+      if(getVal('as_nlo')) params.set('as_nlo', getVal('as_nlo'));
+      if(getVal('as_nhi')) params.set('as_nhi', getVal('as_nhi'));
+      // gizli/deneysel parametreler
+      if(getVal('udm')) params.set('udm', getVal('udm'));
+      if(getVal('biw')) params.set('biw', getVal('biw'));
+      if(getVal('bih')) params.set('bih', getVal('bih'));
+      if(getVal('cad')) params.set('cad', getVal('cad'));
+      if(getVal('uule')) params.set('uule', getVal('uule'));
+      if(getVal('sourceid')) params.set('sourceid', getVal('sourceid'));
+      if(getVal('ved')) params.set('ved', getVal('ved'));
+      if(getVal('nfpr')) params.set('nfpr', getVal('nfpr'));
+      // ekstra debug parametreleri (boşsa eklenmez)
+      return 'https://www.google.com/search?'+params.toString();
+    }
+
+    // UI güncelleme
+    function refresh(){
+      const url = buildUrl();
+      $('fullUrl').textContent = url;
+      $('qPreview').textContent = buildQuery() || '(boş)';
+      window.currentUrl = url;
+    }
+
+    // change listener
+    document.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input', refresh));
+    refresh();
+
+    // Open / copy / share
+    $('openBtn').addEventListener('click', ()=>{ window.open(window.currentUrl,'_blank'); });
+    $('copyBtn').addEventListener('click', ()=>{ navigator.clipboard.writeText(window.currentUrl).then(()=>alert('Kopyalandı')).catch(()=>alert('Kopyalama başarısız')); });
+    $('shareBtn').addEventListener('click', ()=>{ if(navigator.share){ navigator.share({title:'Google Arama',text:buildQuery(),url:window.currentUrl}).catch(()=>{}); } else alert('Tarayıcı paylaşımı desteklemiyor'); });
+
+    // history
+    function loadHistory(){ const h = JSON.parse(localStorage.getItem('gsearch_history')||'[]'); const sel = $('historyList'); sel.innerHTML=''; h.forEach((u,i)=>{ const o=document.createElement('option'); o.value=u; o.textContent=(i+1)+'. '+(u.slice(0,80)); sel.appendChild(o); }); }
+    $('saveSearch').addEventListener('click', ()=>{ const h=JSON.parse(localStorage.getItem('gsearch_history')||'[]'); h.unshift(window.currentUrl); localStorage.setItem('gsearch_history', JSON.stringify(h.slice(0,50))); loadHistory(); alert('Kaydedildi'); });
+    $('loadHistory').addEventListener('click', ()=>{ const sel=$('historyList'); if(sel.value){ window.open(sel.value,'_blank'); } else alert('Seçili geçmiş yok'); });
+    $('clearHistory').addEventListener('click', ()=>{ if(confirm('Geçmiş temizlensin mi?')){ localStorage.removeItem('gsearch_history'); loadHistory(); } });
+    loadHistory();
+
+    // presets
+    document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click', ()=>{
+      const p=b.dataset.preset;
+      if(p==='recentpdf'){ $('as_filetype').value='pdf'; $('as_qdr').value='qdr:m6'; }
+      if(p==='nocust'){ $('pws').value='0'; $('filter').value='0'; }
+      if(p==='turkishalltitles'){ $('lr').value='lang_tr'; $('intitle').value=''; }
+      refresh();
+    }));
+
+    // save/load preset
+    $('savePreset').addEventListener('click', ()=>{
+      const name = prompt('Önayar adı:'); if(!name) return; const obj={}; fields.concat(['lr','gl','cr','tbm','num','start','safe','filter','pws']).forEach(k=>{ const el=$(k); if(el) obj[k]=el.value; });
+      const list = JSON.parse(localStorage.getItem('gsearch_presets')||'{}'); list[name]=obj; localStorage.setItem('gsearch_presets', JSON.stringify(list)); alert('Kaydedildi'); populatePresets();
+    });
+    function populatePresets(){ const box=$('savedPresets'); box.innerHTML=''; const list=JSON.parse(localStorage.getItem('gsearch_presets')||'{}'); Object.keys(list).forEach(k=>{ const o=document.createElement('option'); o.value=k; o.textContent=k; box.appendChild(o); }); }
+    populatePresets();
+    $('loadPreset').addEventListener('click', ()=>{ const sel=$('savedPresets'); const key=sel.value; if(!key) return alert('Önayar seçin'); const list=JSON.parse(localStorage.getItem('gsearch_presets')||'{}'); const obj=list[key]; Object.keys(obj||{}).forEach(k=>{ if($(k)) $(k).value=obj[
