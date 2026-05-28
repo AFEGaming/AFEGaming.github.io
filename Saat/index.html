@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masaüstü Dijital Saat</title>
+    <style>
+        /* Temel Ayarlar ve Material Tasarım Arka Planı */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* height yerine min-height, mobilde kaydırmayı engeller */
+            background-color: #e0e5ec;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Saati İçine Alan Material Kart Tasarımı */
+        .clock-card {
+            background-color: #ffffff;
+            padding: 5%; /* Sabit px yerine ekranın %5'i kadar iç boşluk */
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 90%; /* Mobilde ekranın %90'ını kaplar */
+            max-width: 750px; /* Ancak bilgisayarda 750px'i geçmez */
+            box-sizing: border-box;
+        }
+
+        /* Rakamların ve İki Noktanın Yan Yana Durduğu Kısım */
+        .time-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 1%; /* Ekran genişliğine göre ufak boşluklar */
+        }
+
+        /* GIF'lerin Boyutlandırması (Dinamik) */
+        .digit {
+            width: 12%; /* Konteynerin %12'si kadar yer kaplar (mobilde küçülür) */
+            max-width: 80px; /* Bilgisayarda en fazla bu kadar büyür */
+            height: auto; /* Resmin orantısını bozmadan yüksekliği ayarlar */
+            object-fit: contain;
+        }
+
+        /* Yanıp Sönen İki Nokta ( : ) Tasarımı */
+        .colon {
+            /* clamp() ile font boyutu: En az 30px, ortalama ekranın %6'sı, en çok 80px olur */
+            font-size: clamp(30px, 6vw, 80px);
+            font-weight: 700;
+            color: #333333;
+            margin: 0 1%;
+            line-height: 1;
+            padding-bottom: clamp(5px, 2vw, 15px); /* Rakam hizalaması da dinamikleşti */
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* Tarih Kısmı Tasarımı */
+        .date-display {
+            font-size: clamp(16px, 4vw, 28px); /* Mobilde küçük, PC'de büyük font */
+            font-weight: 500;
+            color: #5f6368;
+            text-transform: capitalize;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clock-card">
+        <div class="time-container">
+            <img class="digit" id="hour-tens" src="" alt="0">
+            <img class="digit" id="hour-ones" src="" alt="0">
+            
+            <div class="colon">:</div>
+            
+            <img class="digit" id="min-tens" src="" alt="0">
+            <img class="digit" id="min-ones" src="" alt="0">
+            
+            <div class="colon">:</div>
+            
+            <img class="digit" id="sec-tens" src="" alt="0">
+            <img class="digit" id="sec-ones" src="" alt="0">
+        </div>
+
+        <div class="date-display" id="date-display"></div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+
+            document.getElementById('hour-tens').src = hours[0] + '.gif';
+            document.getElementById('hour-ones').src = hours[1] + '.gif';
+            
+            document.getElementById('min-tens').src = minutes[0] + '.gif';
+            document.getElementById('min-ones').src = minutes[1] + '.gif';
+            
+            document.getElementById('sec-tens').src = seconds[0] + '.gif';
+            document.getElementById('sec-ones').src = seconds[1] + '.gif';
+
+            const aylar = [
+                "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", 
+                "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+            ];
+            const gunler = [
+                "Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"
+            ];
+
+            const dayNum = now.getDate();
+            const monthStr = aylar[now.getMonth()];
+            const dayStr = gunler[now.getDay()];
+
+            const dateString = `${dayNum} ${monthStr} ${dayStr}`;
+            document.getElementById('date-display').innerText = dateString;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+
+</body>
+</html>
