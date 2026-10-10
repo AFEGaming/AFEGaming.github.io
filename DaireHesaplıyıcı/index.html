@@ -38,6 +38,7 @@
     border-radius: 6px;
     border: none;
     font-size: 16px;
+    box-sizing: border-box;
   }
   .hint {
     font-size: 12px;
@@ -91,16 +92,18 @@
     text-align: center;
   }
 </style>
+  <link rel="icon" href="../profil.png" type="image/png">
+  <link rel="shortcut icon" href="../profil.png" type="image/png">
 </head>
 <body>
 <div class="container">
   <h1>Daire Hesaplama</h1>
   
   <label for="width">Çap</label>
-  <input type="number" id="width" placeholder="Örn: 10" min="0">
+  <input type="number" id="width" placeholder="Örn: 10.5" min="0" step="any">
   
   <label for="smoothness">Pürüzsüzlük (Smoothness)<span class="hint">(24 önerilir)</span></label>
-  <input type="number" id="smoothness" placeholder="Örn: 24" min="1">
+  <input type="number" id="smoothness" placeholder="Örn: 24" min="0.1" step="any">
   
   <button id="calculate">Hesapla</button>
   
@@ -111,8 +114,7 @@
 
   <!-- Extra içerik: tek görsel ve açıklama -->
   <div class="extra-content">
-    <iframe src="https://www.youtube.com/embed/VIDEO_ID" 
-      title="YouTube video" allowfullscreen></iframe>
+  <!-- No video, no iframe xd -->
 
     <img src="diameter.png" alt="Çap ve pürüzsüzlük">
 

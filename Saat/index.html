@@ -4,60 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masaüstü Dijital Saat</title>
-    <style>
-        /* Temel Ayarlar ve Material Tasarım Arka Planı */
+    <link rel="icon" href="../profil.png" type="image/png">
+    <link rel="shortcut icon" href="../profil.png" type="image/png">
+<style>
         body {
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* height yerine min-height, mobilde kaydırmayı engeller */
+            min-height: 100vh;
             background-color: #e0e5ec;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Saati İçine Alan Material Kart Tasarımı */
         .clock-card {
             background-color: #ffffff;
-            padding: 5%; /* Sabit px yerine ekranın %5'i kadar iç boşluk */
+            padding: 5%;
             border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1), 0 1px 8px rgba(0, 0, 0, 0.05);
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            width: 90%; /* Mobilde ekranın %90'ını kaplar */
-            max-width: 750px; /* Ancak bilgisayarda 750px'i geçmez */
+            width: 90%;
+            max-width: 750px;
             box-sizing: border-box;
         }
 
-        /* Rakamların ve İki Noktanın Yan Yana Durduğu Kısım */
         .time-container {
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            gap: 1%; /* Ekran genişliğine göre ufak boşluklar */
+            gap: 1%;
         }
 
-        /* GIF'lerin Boyutlandırması (Dinamik) */
         .digit {
-            width: 12%; /* Konteynerin %12'si kadar yer kaplar (mobilde küçülür) */
-            max-width: 80px; /* Bilgisayarda en fazla bu kadar büyür */
-            height: auto; /* Resmin orantısını bozmadan yüksekliği ayarlar */
+            width: 12%;
+            max-width: 80px;
+            height: auto;
             object-fit: contain;
         }
 
-        /* Yanıp Sönen İki Nokta ( : ) Tasarımı */
         .colon {
-            /* clamp() ile font boyutu: En az 30px, ortalama ekranın %6'sı, en çok 80px olur */
             font-size: clamp(30px, 6vw, 80px);
             font-weight: 700;
             color: #333333;
             margin: 0 1%;
             line-height: 1;
-            padding-bottom: clamp(5px, 2vw, 15px); /* Rakam hizalaması da dinamikleşti */
+            padding-bottom: clamp(5px, 2vw, 15px);
             animation: blink 1s infinite;
         }
 
@@ -66,18 +62,56 @@
             50% { opacity: 0.2; }
         }
 
-        /* Tarih Kısmı Tasarımı */
         .date-display {
-            font-size: clamp(16px, 4vw, 28px); /* Mobilde küçük, PC'de büyük font */
+            font-size: clamp(16px, 4vw, 28px);
             font-weight: 500;
             color: #5f6368;
             text-transform: capitalize;
             text-align: center;
         }
+
+        .top-left-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            background-color: rgb(50, 50, 50);
+            color: rgb(205,208,213);
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .top-left-button:hover {
+            background-color: rgb(5,50,50);
+            transform: scale(1.15);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+            }
+
+            .clock-card {
+                background-color: #1e1e1e;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 1px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            .colon {
+                color: #e0e0e0;
+            }
+
+            .date-display {
+                color: #a0a0a0;
+            }
+        }
     </style>
 </head>
 <body>
-
+    <a href="../"><button class="top-left-button">Ana Sayfa</button></a>
+    
     <div class="clock-card">
         <div class="time-container">
             <img class="digit" id="hour-tens" src="" alt="0">
